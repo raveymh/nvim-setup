@@ -9,6 +9,7 @@
 return {
   -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',
+  event = 'VeryLazy',
   -- NOTE: And you can specify dependencies as well
   dependencies = {
     -- Creates a beautiful debugger UI
@@ -35,13 +36,13 @@ return {
       { '<F8>', dap.terminate, desc = 'Debug : Terminate' },
       { '<S-F11>', dap.step_out, desc = 'Debug: Step Out' },
       { '<leader>b', dap.toggle_breakpoint, desc = 'Debug: Toggle Breakpoint' },
-      {
-        '<leader>B',
-        function()
-          dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-        end,
-        desc = 'Debug: Set Breakpoint',
-      },
+      -- {
+      --   '<leader>B',
+      --   function()
+      --     dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+      --   end,
+      --   desc = 'Debug: Set Breakpoint',
+      -- },
       -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
       { '<F7>', dapui.toggle, desc = 'Debug: See last session result.' },
       unpack(keys),
@@ -76,6 +77,8 @@ return {
       --    Don't feel like these are good choices.
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
       controls = {
+        element = 'repl',
+        enabled = true,
         icons = {
           pause = '⏸',
           play = '▶',
@@ -86,7 +89,66 @@ return {
           run_last = '▶▶',
           terminate = '⏹',
           disconnect = '⏏',
+          collapsed = '',
+          current_frame = '',
+          expanded = '',
         },
+      },
+      element_mappings = {},
+      expand_lines = true,
+      floating = {
+        border = 'single',
+        mappings = {
+          close = { 'q', '<Esc>' },
+        },
+      },
+      force_buffers = true,
+      layouts = {
+        {
+          elements = {
+            {
+              id = 'scopes',
+              size = 0.25,
+            },
+            {
+              id = 'breakpoints',
+              size = 0.25,
+            },
+            {
+              id = 'stacks',
+              size = 0.25,
+            },
+            {
+              id = 'watches',
+              size = 0.25,
+            },
+          },
+          position = 'left',
+          size = 40,
+        },
+        {
+          elements = { {
+            id = 'repl',
+            size = 0.5,
+          }, {
+            id = 'console',
+            size = 0.5,
+          } },
+          position = 'bottom',
+          size = 10,
+        },
+      },
+      mappings = {
+        edit = 'e',
+        expand = { '<CR>', '<2-LeftMouse>' },
+        open = 'o',
+        remove = 'd',
+        repl = 'r',
+        toggle = 't',
+      },
+      render = {
+        indent = 1,
+        max_value_lines = 100,
       },
     }
 
@@ -106,6 +168,7 @@ return {
         name = 'Launch Main Scene',
         -- specific to gdscript
         project = '${workspaceFolder}',
+        launch_scene = true,
       },
     }
 
