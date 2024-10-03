@@ -8,34 +8,6 @@ vim.g.python3_host_prog = 'C:\\Users\\User\\scoop\\apps\\python310\\current\\pyt
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
--- NOTE: Neovide Setup
-if vim.g.neovide then
-  local default_path = vim.fn.expand 'D:\\Projects'
-  vim.api.nvim_set_current_dir(default_path)
-  vim.o.guifont = 'Hack Nerd Font:h14'
-  vim.g.neovide_text_contrast = 0.8
-  vim.g.neovide_transparency = 0.98
-  vim.g.neovide_scroll_animation_length = 0.1
-  vim.g.neovide_scroll_animation_far_lines = 0.6
-  vim.g.neovide_cursor_vfx_mode = 'ripple'
-  vim.g.neovide_cursor_animation_length = 0.05
-  vim.g.neovide_cursor_trail_size = 0.2
-  vim.g.neovide_curosr_smooth_blink = true
-  vim.g.neovide_profiler = false
-
-  vim.keymap.set({ 'n', 'v', 'i', 'c' }, '<C-v>', '"+P')
-  vim.g.neovide_scale_factor = 1.0
-  local change_scale_factor = function(delta)
-    vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * delta
-  end
-  vim.keymap.set('n', '<C-=>', function()
-    change_scale_factor(1.1)
-  end)
-  vim.keymap.set('n', '<C-->', function()
-    change_scale_factor(1 / 1.1)
-  end)
-end
-
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.textwidth = 0
@@ -69,6 +41,12 @@ vim.opt.undofile = true
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+
+-- Tabs
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+vim.bo.softtabstop = 4
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -115,6 +93,7 @@ vim.opt.incsearch = true
 vim.keymap.set({ 'n', 'i' }, '<C-s>', '<Esc>:w<CR>')
 vim.keymap.set('n', ']b', ':bnext<CR>', { noremap = false })
 vim.keymap.set('n', '[b', ':bprev<CR>', { noremap = false })
+vim.keymap.set('n', ';b', ':bd<CR>', { noremap = false })
 
 -- Disable s key for mini.surround
 vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
@@ -714,7 +693,7 @@ require('lazy').setup({
           light = 'frappe',
           dark = 'mocha',
         },
-        transparent_background = false, -- disables setting the background color.
+        transparent_background = true, -- disables setting the background color.
         show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
         term_colors = true, -- sets terminal colors (e.g. `g:terminal_color_0`)
         dim_inactive = {
