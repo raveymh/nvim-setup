@@ -12,6 +12,7 @@ return {
       name = 'notify',
       opts = {
         stages = 'static',
+        background_colour = '#000000',
       },
     },
   },
@@ -20,11 +21,25 @@ return {
   end,
   require('noice').setup {
     lsp = {
+      progress = {
+        enabled = false,
+        view = 'notify',
+      },
       -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
       override = {
-        ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
-        ['vim.lsp.util.stylize_markdown'] = true,
+        ['vim.lsp.util.convert_input_to_markdown_lines'] = false,
+        ['vim.lsp.util.stylize_markdown'] = false,
         ['cmp.entry.get_documentation'] = true, -- requires hrsh7th/nvim-cmp
+      },
+      hover = {
+        enabled = false,
+      },
+      signature = {
+        enabled = false,
+        auto_open = {
+          enabled = false,
+        },
+        view = 'notify',
       },
     },
     -- you can enable a preset for easier configuration
@@ -36,6 +51,18 @@ return {
     messages = {
       view = 'mini',
       view_warn = 'mini',
+    },
+    views = {
+      mini = {
+        timeout = 1000,
+        border = {
+          style = 'none',
+          padding = { 0, 1 },
+        },
+        win_options = {
+          winblend = 0,
+        },
+      },
     },
   },
 }
