@@ -1,13 +1,13 @@
 vim.opt_local.formatoptions:remove 'o'
-vim.keymap.set({ 'n' }, '<leader>g', '<Esc>:!gdformat %<CR>', { desc = '[G]d format' })
+vim.keymap.set({ 'n' }, '<leader>g', '<cmd>!gdformat %<CR>', { desc = '[G]d format' })
 
 -- use folding provided by plugin
 -- vim.opt_local.foldmethod = 'expr'
 -- Key mappings for Godot commands
-vim.api.nvim_buf_set_keymap(0, 'n', '<F4>', ':GodotRunLast<CR>', { noremap = true, silent = true })
-vim.api.nvim_buf_set_keymap(0, 'n', '<F5>', ':GodotRun<CR>', { noremap = true, silent = true })
-vim.api.nvim_buf_set_keymap(0, 'n', '<F6>', ':GodotRunCurrent<CR>', { noremap = true, silent = true })
-vim.api.nvim_buf_set_keymap(0, 'n', '<F7>', ':GodotRunFZF<CR>', { noremap = true, silent = true })
+vim.api.nvim_buf_set_keymap(0, 'n', '<F4>', '<cmd>GodotRunLast<CR>', { noremap = true, silent = true })
+vim.api.nvim_buf_set_keymap(0, 'n', '<F5>', '<cmd>GodotRun<CR>', { noremap = true, silent = true })
+vim.api.nvim_buf_set_keymap(0, 'n', '<F6>', '<cmd>GodotRunCurrent<CR>', { noremap = true, silent = true })
+vim.api.nvim_buf_set_keymap(0, 'n', '<F7>', '<cmd>GodotRunFZF<CR>', { noremap = true, silent = true })
 
 -- Display window reference
 local win_id = nil
@@ -69,9 +69,9 @@ function DisplayCodeOrder()
   win_id = vim.api.nvim_open_win(buf_id, true, opts)
 
   -- Close window
-  vim.api.nvim_buf_set_keymap(buf_id, 'n', '<Esc>', ':q<CR>', { noremap = true, silent = true })
-  vim.api.nvim_buf_set_keymap(buf_id, 'n', 'q', ':q<CR>', { noremap = true, silent = true })
+  vim.api.nvim_buf_set_keymap(buf_id, 'n', '<Esc>', '<cmd>q<CR>', { noremap = true, silent = true })
+  vim.api.nvim_buf_set_keymap(buf_id, 'n', 'q', '<cmd>q<CR>', { noremap = true, silent = true })
 end
 
 vim.api.nvim_create_user_command('DisplayCodeOrder', DisplayCodeOrder, {})
-vim.keymap.set({ 'n', 'v' }, '<leader>o', ':DisplayCodeOrder<CR>', { desc = 'Display Code [o]rder' })
+vim.keymap.set({ 'n', 'v' }, '<leader>o', '<cmd>DisplayCodeOrder<CR>', { desc = 'Display Code [o]rder' })
