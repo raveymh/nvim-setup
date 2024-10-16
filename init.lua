@@ -50,7 +50,7 @@ vim.opt.expandtab = true
 -- vim.bo.softtabstop = 4
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
+vim.o.completeopt = 'menu,menuone,noselect'
 vim.o.pumblend = 10
 vim.o.pumheight = 10
 
@@ -101,7 +101,8 @@ vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
 vim.keymap.set('n', 'q', '<Nop>')
 
 vim.keymap.set('n', '<leader>z', ":lua require('zen-mode').toggle({})<cr>", { desc = 'Toggle [z]enmode' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>q', ':q<CR>', { desc = 'Quit' })
+
 -- keep cursor in middle of the screen when C-d and C-u or n N navigating
 vim.keymap.set({ 'n', 'v' }, '<C-d>', '<C-d>zz')
 vim.keymap.set({ 'n', 'v' }, '<C-u>', '<C-u>zz')
@@ -310,7 +311,7 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
-
+  { 'junegunn/fzf.vim', dependencies = { 'junegunn/fzf' }, dir = '~/.fzf', build = './install --all' },
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -455,8 +456,7 @@ require('lazy').setup({
           vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', { desc = 'List references under quickfix window' })
           vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Display signature information' })
           vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', { desc = 'Rename all references' })
-          vim.keymap.set({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', { desc = 'Format buffer' })
-          vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', { desc = 'Code actions' })
+          vim.keymap.set('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<cr>', { desc = 'Code actions' })
         end,
       })
 
@@ -539,6 +539,45 @@ require('lazy').setup({
       end
       require('lspconfig').gdscript.setup(gdscript_config)
     end,
+  },
+
+  {
+    'saghen/blink.cmp',
+    lazy = false, -- lazy loading handled internally
+    -- optional: provides snippets for the snippet source
+    dependencies = 'rafamadriz/friendly-snippets',
+
+    -- use a release tag to download pre-built binaries
+    version = 'v0.*',
+    -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+    -- build = 'cargo build --release',
+    -- On musl libc based systems you need to add this flag
+    -- build = 'RUSTFLAGS="-C target-feature=-crt-static" cargo build --release',
+
+    opts = {
+      keymap = {
+        show = '<C-t>',
+        show_documentation = '<C-b>',
+        hide_documentation = '<C-b>',
+        scroll_documentation_up = '<C-u>',
+        scroll_documentation_down = '<C-d>',
+      },
+      highlight = {
+        -- sets the fallback highlight groups to nvim-cmp's highlight groups
+        -- useful for when your theme doesn't support blink.cmp
+        -- will be removed in a future release, assuming themes add support
+        use_nvim_cmp_as_default = true,
+      },
+      -- set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+      -- adjusts spacing to ensure icons are aligned
+      nerd_font_variant = 'mono',
+
+      -- experimental auto-brackets support
+      -- accept = { auto_brackets = { enabled = true } }
+
+      -- experimental signature help support
+      trigger = { signature_help = { enabled = true } },
+    },
   },
 
   { -- Autoformat
@@ -633,7 +672,7 @@ require('lazy').setup({
         window = {
           documentation = cmp.config.window.bordered(),
         },
-        completion = { completeopt = 'menu,menuone,noinsert' },
+        completion = { autocomplete = false, completeopt = 'menu,menuone,noselect' },
 
         -- For an understanding of why these mappings were
         -- chosen, you will need to read `:help ins-completion`
@@ -649,22 +688,12 @@ require('lazy').setup({
           ['<C-u>'] = cmp.mapping.scroll_docs(-4),
           ['<C-d>'] = cmp.mapping.scroll_docs(4),
 
-          -- Accept ([y]es) the completion.
-          --  This will auto-import if your LSP supports it.
-          --  This will expand snippets if the LSP sent a snippet.
-          -- ['<C-y>'] = cmp.mapping.confirm { select = true },
-
-          -- If you prefer more traditional completion keymaps,
-          -- you can uncomment the following lines
-          -- ['<CR>'] = cmp.mapping.confirm { select = true },
-          -- ['<Tab>'] = cmp.mapping.select_next_item(),
-          -- ['<S-Tab>'] = cmp.mapping.select_prev_item(),
-          ['<Tab>'] = cmp.mapping.confirm { select = true },
+          ['<CR>'] = cmp.mapping.confirm { select = true },
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
-          ['<C-Space>'] = cmp.mapping.complete {},
+          ['<C-A-t>'] = cmp.mapping.complete(),
 
           -- Think of <c-l> as moving to the right of your snippet expansion.
           --  So if you have a snippet that's like:
@@ -695,6 +724,7 @@ require('lazy').setup({
             group_index = 0,
           },
           { name = 'nvim_lsp' },
+          { name = 'buffer' },
           { name = 'luasnip' },
           { name = 'path' },
         },
@@ -786,7 +816,20 @@ require('lazy').setup({
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
-  { 'folke/trouble.nvim', event = 'VimEnter' },
+  { 'folke/trouble.nvim', event = 'VeryLazy' },
+  {
+    'folke/flash.nvim',
+    event = 'VeryLazy',
+    opts = {},
+    -- stylua: ignore
+    keys = {
+        { "zk",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+        { "Zk",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+        { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+        { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+        { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+    },
+  },
   { 'folke/zen-mode.nvim', event = 'VeryLazy' },
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
