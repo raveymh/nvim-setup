@@ -36,7 +36,7 @@ return {
         enabled = false,
       },
       signature = {
-        enabled = true,
+        enabled = false,
         auto_open = {
           enabled = false,
         },
@@ -51,6 +51,16 @@ return {
     },
     messages = {
       view = 'mini',
+    },
+    commands = {
+      history = {
+        filter = {
+          any = {
+            { error = false },
+            { warning = false },
+          },
+        },
+      },
     },
     views = {
       mini = {

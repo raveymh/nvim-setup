@@ -1,4 +1,3 @@
--- NOTE: Leader Key
 vim.keymap.set('n', '<leader>z', ":lua require('zen-mode').toggle({})<cr>", { desc = 'Toggle [z]enmode' })
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -529,6 +528,19 @@ require('lazy').setup({
       require('lspconfig').gdscript.setup(gdscript_config)
     end,
   },
+  {
+    'ray-x/lsp_signature.nvim',
+    event = 'VeryLazy',
+    opts = {
+      bind = true,
+      handler_opts = {
+        border = 'rounded',
+      },
+    },
+    config = function(_, opts)
+      require('lsp_signature').setup(opts)
+    end,
+  },
 
   {
     'saghen/blink.cmp',
@@ -873,6 +885,15 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = false, disable = { 'ruby' } },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = 'hn', -- set to `false` to disable one of the mappings
+          node_incremental = 'n',
+          scope_incremental = 's',
+          node_decremental = 'N',
+        },
+      },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
