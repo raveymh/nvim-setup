@@ -790,7 +790,7 @@ require('lazy').setup({
           treesitter = true,
           telescope = true,
           which_key = true,
-          notify = false,
+          notify = true,
           mini = {
             enabled = true,
             indentscope_color = '',
