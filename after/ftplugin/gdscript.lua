@@ -1,10 +1,8 @@
--- local set = vim.opt_local
---
--- set.formatoptions:remove 'o'
+vim.opt_local.formatoptions:remove 'o'
 vim.keymap.set({ 'n' }, '<leader>g', '<Esc>:!gdformat %<CR>', { desc = '[G]d format' })
 
 -- use folding provided by plugin
-vim.opt_local.foldmethod = 'expr'
+-- vim.opt_local.foldmethod = 'expr'
 -- Key mappings for Godot commands
 vim.api.nvim_buf_set_keymap(0, 'n', '<F4>', ':GodotRunLast<CR>', { noremap = true, silent = true })
 vim.api.nvim_buf_set_keymap(0, 'n', '<F5>', ':GodotRun<CR>', { noremap = true, silent = true })

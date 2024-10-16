@@ -614,7 +614,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        -- gdscript = { 'gdformat' },
+        gdscript = { 'gdformat' },
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
