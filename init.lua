@@ -82,6 +82,7 @@ vim.keymap.set({ 'n', 'i' }, '<C-s>', '<Esc>:w<CR>')
 vim.keymap.set('n', ']b', ':bnext<CR>', { noremap = false })
 vim.keymap.set('n', '[b', ':bprev<CR>', { noremap = false })
 vim.keymap.set('n', ';b', ':bd<CR>', { noremap = false })
+vim.keymap.set('n', '<C-f>', '/', { noremap = false })
 
 -- Disable s key for mini.surround
 vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
@@ -252,7 +253,7 @@ require('lazy').setup({
       require('telescope').setup {
         extensions = {
           ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
+            require('telescope.themes').get_ivy(),
           },
         },
       }
@@ -265,24 +266,24 @@ require('lazy').setup({
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
       vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = '[F]ind [K]eymaps' })
-      vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind by [W]ord' })
-      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = '[F]ind by [G]rep' })
+      -- vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind by [W]ord' })
+      -- vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = '[F]ind by [G]rep' })
       vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnotics' })
       vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = '[F]ind [R]ecently opened files' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = '[F]ind [B]uffers' })
       vim.keymap.set('n', '<leader>bc', '::%bd|e#|bd#<CR>', { desc = '[C]lose other buffers' })
       vim.keymap.set('n', '<leader>bn', ':bnext<CR>', { desc = '[N]ext buffer' })
       vim.keymap.set('n', '<leader>bp', ':bprevious<CR>', { desc = '[P]revious buffer' })
       vim.keymap.set('n', '<leader>bd', ':bd<CR>', { desc = '[D]elete buffer' })
 
       -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set('n', '<leader>/', function()
-        -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
-      end, { desc = '[/] Fuzzily search in current buffer' })
+      -- vim.keymap.set('n', '<leader>/', function()
+      --   -- You can pass additional configuration to Telescope to change the theme, layout, etc.
+      --   builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+      --     winblend = 10,
+      --     previewer = false,
+      --   })
+      -- end, { desc = '[/] Fuzzily search in current buffer' })
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
@@ -296,7 +297,7 @@ require('lazy').setup({
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>fn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[F]earch [N]eovim files' })
+      end, { desc = '[F]ind [N]eovim files' })
     end,
   },
   { 'junegunn/fzf.vim', dependencies = { 'junegunn/fzf' }, dir = '~/.fzf', build = './install --all' },
