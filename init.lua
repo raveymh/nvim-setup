@@ -79,9 +79,9 @@ vim.opt.incsearch = true
 
 -- NOTE: KEYMAPS
 vim.keymap.set({ 'n', 'i' }, '<C-s>', '<Esc>:w<CR>')
-vim.keymap.set('n', ']b', ':bnext<CR>', { noremap = false })
-vim.keymap.set('n', '[b', ':bprev<CR>', { noremap = false })
-vim.keymap.set('n', ';b', ':bd<CR>', { noremap = false })
+vim.keymap.set('n', ']b', '<cmd>bnext<CR>', { noremap = false })
+vim.keymap.set('n', '[b', '<cmd>bprev<CR>', { noremap = false })
+vim.keymap.set('n', ';b', '<cmd>bd<CR>', { noremap = false })
 vim.keymap.set('n', '<C-f>', '/', { noremap = false })
 
 -- Disable s key for mini.surround
@@ -89,7 +89,7 @@ vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
 vim.keymap.set('n', 'q', '<Nop>')
 
 vim.keymap.set('n', '<leader>z', ":lua require('zen-mode').toggle({})<cr>", { desc = 'Toggle [z]enmode' })
-vim.keymap.set('n', '<leader>q', ':q<CR>', { desc = 'Quit' })
+vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit' })
 
 -- keep cursor in middle of the screen when C-d and C-u or n N navigating
 vim.keymap.set({ 'n', 'v' }, '<C-d>', '<C-d>zz')
@@ -265,16 +265,16 @@ require('lazy').setup({
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
+      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = '[F]ind by [G]rep' })
       vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = '[F]ind [K]eymaps' })
       -- vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind by [W]ord' })
-      -- vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = '[F]ind by [G]rep' })
       vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnotics' })
       vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = '[F]ind [R]ecently opened files' })
       vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = '[F]ind [B]uffers' })
-      vim.keymap.set('n', '<leader>bc', '::%bd|e#|bd#<CR>', { desc = '[C]lose other buffers' })
-      vim.keymap.set('n', '<leader>bn', ':bnext<CR>', { desc = '[N]ext buffer' })
-      vim.keymap.set('n', '<leader>bp', ':bprevious<CR>', { desc = '[P]revious buffer' })
-      vim.keymap.set('n', '<leader>bd', ':bd<CR>', { desc = '[D]elete buffer' })
+      vim.keymap.set('n', '<leader>bc', '<cmd>%bd|e#|bd#<CR>', { desc = '[C]lose other buffers' })
+      vim.keymap.set('n', '<leader>bn', '<cmd>bnext<CR>', { desc = '[N]ext buffer' })
+      vim.keymap.set('n', '<leader>bp', '<cmd>bprevious<CR>', { desc = '[P]revious buffer' })
+      vim.keymap.set('n', '<leader>bd', '<cmd>bd<CR>', { desc = '[D]elete buffer' })
 
       -- Slightly advanced example of overriding default behavior and theme
       -- vim.keymap.set('n', '<leader>/', function()
@@ -565,7 +565,7 @@ require('lazy').setup({
       -- accept = { auto_brackets = { enabled = true } }
 
       -- experimental signature help support
-      trigger = { signature_help = { enabled = true } },
+      -- trigger = { signature_help = { enabled = true } },
     },
   },
 

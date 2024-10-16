@@ -25,9 +25,16 @@ return {
       sections = {
         lualine_a = { 'mode' },
         lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_c = {},
         lualine_x = { 'encoding', 'fileformat', 'filetype' },
-        lualine_y = { 'progress' },
-        lualine_z = { 'location' },
+        lualine_y = {
+          {
+            require('noice').api.status.command.get,
+            cond = require('noice').api.status.command.has,
+            color = { fg = '#dda6f7' },
+          },
+        },
+        lualine_z = { 'progress', 'location' },
       },
       inactive_sections = {
         lualine_a = { 'filename' },

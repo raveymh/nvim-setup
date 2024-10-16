@@ -16,6 +16,7 @@ return {
       },
     },
   },
+  vim.keymap.set('n', '<leader>n', '<cmd>Noice<CR>', { desc = 'Noice messages' }),
   init = function()
     vim.opt.lazyredraw = false
   end,
@@ -35,7 +36,7 @@ return {
         enabled = false,
       },
       signature = {
-        enabled = false,
+        enabled = true,
         auto_open = {
           enabled = false,
         },
@@ -45,12 +46,11 @@ return {
     -- you can enable a preset for easier configuration
     presets = {
       bottom_search = true, -- use a classic bottom cmdline for search
-      -- command_palette = true, -- position the cmdline and popupmenu together
+      command_palette = true, -- position the cmdline and popupmenu together
       long_message_to_split = true, -- long messages will be sent to a split
     },
     messages = {
       view = 'mini',
-      view_warn = 'mini',
     },
     views = {
       mini = {
@@ -62,6 +62,12 @@ return {
         win_options = {
           winblend = 0,
         },
+      },
+    },
+    routes = {
+      {
+        view = 'split',
+        filter = { event = 'msg_show', min_height = 20 },
       },
     },
   },
