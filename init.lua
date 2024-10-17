@@ -282,10 +282,10 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnotics' })
       vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = '[F]ind [R]ecently opened files' })
       vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = '[F]ind [B]uffers' })
-      vim.keymap.set('n', '<leader>bc', '<cmd>%bd|e#|bd#<CR>', { desc = '[C]lose other buffers' })
-      vim.keymap.set('n', '<leader>bn', '<cmd>bnext<CR>', { desc = '[N]ext buffer' })
-      vim.keymap.set('n', '<leader>bp', '<cmd>bprevious<CR>', { desc = '[P]revious buffer' })
-      vim.keymap.set('n', '<leader>bd', '<cmd>bd<CR>', { desc = '[D]elete buffer' })
+      vim.keymap.set('n', '<C-b>o', '<cmd>%bd|e#|bd#<CR>', { desc = 'Close all other buffers' })
+      vim.keymap.set('n', '<C-b>n', '<cmd>bnext<CR>', { desc = 'Next buffer' })
+      vim.keymap.set('n', '<C-b>p', '<cmd>bprevious<CR>', { desc = 'Previous buffer' })
+      vim.keymap.set('n', '<C-b>d', '<cmd>bd<CR>', { desc = 'Delete buffer' })
 
       -- Slightly advanced example of overriding default behavior and theme
       -- vim.keymap.set('n', '<leader>/', function()
@@ -900,7 +900,7 @@ require('lazy').setup({
       incremental_selection = {
         enable = true,
         keymaps = {
-          init_selection = 'hn', -- set to `false` to disable one of the mappings
+          init_selection = 'gnn', -- set to `false` to disable one of the mappings
           node_incremental = 'n',
           scope_incremental = 's',
           node_decremental = 'N',
