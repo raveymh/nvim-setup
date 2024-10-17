@@ -18,7 +18,7 @@ return {
     'nvim-treesitter/nvim-treesitter',
     'nvim-tree/nvim-web-devicons',
   },
-  vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { desc = 'Next symbol' }),
-  vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { desc = 'Previous symbol' }),
+  vim.keymap.set('n', ']s', '<cmd>AerialNext<CR>', { desc = 'Next symbol' }),
+  vim.keymap.set('n', '[s', '<cmd>AerialPrev<CR>', { desc = 'Previous symbol' }),
   vim.keymap.set('n', '<leader>a', '<cmd>AerialNavToggle<CR>', { desc = 'Aerial code navigation' }),
 }

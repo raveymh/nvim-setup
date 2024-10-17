@@ -50,7 +50,7 @@ vim.o.pumheight = 10
 vim.o.list = true
 vim.o.listchars = 'trail:~,tab:> ,nbsp:␣'
 vim.opt.signcolumn = 'yes'
-vim.opt.updatetime = 50
+vim.opt.updatetime = 300
 vim.opt.timeoutlen = 500
 
 vim.opt.splitright = true
@@ -122,19 +122,19 @@ require('lazy').setup({
   --    require('gitsigns').setup({ ... })
   --
   -- See `:help gitsigns` to understand what the configuration keys do
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
-    event = 'VeryLazy',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
+  -- { -- Adds git related signs to the gutter, as well as utilities for managing changes
+  --   'lewis6991/gitsigns.nvim',
+  --   event = 'VeryLazy',
+  --   opts = {
+  --     signs = {
+  --       add = { text = '+' },
+  --       change = { text = '~' },
+  --       delete = { text = '_' },
+  --       topdelete = { text = '‾' },
+  --       changedelete = { text = '~' },
+  --     },
+  --   },
+  -- },
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
@@ -194,6 +194,7 @@ require('lazy').setup({
         { '<leader>g', group = 'Git' },
         { '<leader>t', group = 'Toggle' },
         { '<leader>l', icon = '', group = 'LSP' },
+        { '<leader>c', desc = 'Comment line', icon = '//' },
         { '<leader>fn', desc = 'Neovim config', icon = '⛭' },
         { '<leader>fk', desc = 'Keymaps', icon = '⚿' },
         { "<leader>f'", desc = 'Registers', icon = '[]' },
@@ -236,6 +237,7 @@ require('lazy').setup({
         { 'zo', hidden = true },
         { 'zO', hidden = true },
         { 'zr', hidden = true },
+        { 'zs', hidden = true },
         { 'zt', hidden = true },
         { 'zv', hidden = true },
         { 'zw', hidden = true },
@@ -289,11 +291,11 @@ require('lazy').setup({
             },
           },
         },
-        extensions = {
-          ['ui-select'] = {
-            require('telescope.themes').get_ivy(),
-          },
-        },
+        -- extensions = {
+        --   ['ui-select'] = {
+        --     require('telescope.themes').get_ivy(),
+        --   },
+        -- },
       }
 
       -- Enable Telescope extensions if they are installed
@@ -312,6 +314,8 @@ require('lazy').setup({
       -- NOTE: Other <leader> commands
       vim.keymap.set('n', '<leader>z', "<cmd>lua require('zen-mode').toggle({})<CR>", { desc = 'Zenmode' })
       vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit' })
+      vim.keymap.set('n', '<leader>c', '<cmd>norm gcc<CR>', { desc = 'Comment line' })
+      vim.keymap.set('v', '<leader>c', 'gc', { desc = 'Comment line', remap = true })
       vim.keymap.set('n', '<leader>bo', '<cmd>%bd|e#|bd#<CR>', { desc = 'Close all other buffers' })
       vim.keymap.set('n', '<leader>bn', '<cmd>bnext<CR>', { desc = 'Next buffer' })
       vim.keymap.set('n', '<leader>bp', '<cmd>bprevious<CR>', { desc = 'Previous buffer' })
@@ -775,11 +779,12 @@ require('lazy').setup({
       }
     end,
   },
+
+  -- NOTE: catppuccin colorscheme
   {
     'catppuccin/nvim',
     event = 'VimEnter',
     name = 'catppuccin',
-    priority = 1000,
     init = function()
       require('catppuccin').setup {
         flavour = 'auto', -- latte, frappe, macchiato, mocha
@@ -788,30 +793,10 @@ require('lazy').setup({
           dark = 'mocha',
         },
         transparent_background = true, -- disables setting the background color.
-        show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
         term_colors = true, -- sets terminal colors (e.g. `g:terminal_color_0`)
-        dim_inactive = {
-          enabled = false, -- dims the background color of inactive window
-          shade = 'dark',
-          percentage = 0.15, -- percentage of the shade to apply to the inactive window
-        },
-        no_italic = false, -- Force no italic
-        no_bold = false, -- Force no bold
-        no_underline = false, -- Force no underline
         styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
           comments = { 'italic' }, -- Change the style of comments
           conditionals = {},
-          loops = {},
-          functions = {},
-          keywords = {},
-          strings = {},
-          variables = {},
-          numbers = {},
-          booleans = {},
-          properties = {},
-          types = {},
-          operators = {},
-          -- miscs = {}, -- Uncomment to turn off hard-coded styles
         },
         color_overrides = {
           mocha = {
@@ -823,40 +808,94 @@ require('lazy').setup({
             blue = '#80c4ff',
           },
         },
-        custom_highlights = {},
         default_integrations = true,
         integrations = {
+          aerial = true,
           cmp = true,
           dap = true,
           gitsigns = true,
+          indent_blankline = {
+            enabled = true,
+            scope_color = 'blue',
+            colored_indent_levels = true,
+          },
+          mini = {
+            enabled = false,
+            indentscope_color = 'blue',
+          },
           nvimtree = true,
           treesitter = true,
           telescope = true,
           which_key = true,
-          notify = false,
-          mini = {
-            enabled = true,
-            indentscope_color = '',
-          },
           -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
         },
+        custom_highlights = function(colors)
+          return {
+            TabLineSel = { fg = colors.yellow },
+          }
+        end,
       }
+
+      vim.api.nvim_set_hl(0, 'MiniTablineCurrent', { link = 'StatusLine' })
+      vim.api.nvim_set_hl(0, 'MiniTablineVisible', { link = 'StatusLine' })
+      vim.api.nvim_set_hl(0, 'MiniTablineModifiedCurrent', { link = 'TabLineSel' })
+      vim.api.nvim_set_hl(0, 'MiniTablineModifiedVisible', { link = 'TabLineSel' })
+      vim.api.nvim_set_hl(0, 'MiniTablineHidden', { link = 'FoldColumn' })
       vim.cmd.colorscheme 'catppuccin'
     end,
   },
-  -- {
-  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-  --   'folke/tokyonight.nvim',false
-  --   priority = 1000, -- Make sure to load this before all the other start plugins.
-  --   init = function()
-  --     -- Like many other themes, this one has different styles, and you could load
-  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-  --     vim.cmd.colorscheme 'tokyonight-moon'
-  --
-  --     -- You can configure highlights by doing something like:
-  --     vim.cmd.hi 'Comment gui=none'
-  --   end,
-  -- },
+
+  -- NOTE: Material colorscheme
+  {
+    'marko-cerovac/material.nvim',
+    name = 'material',
+    init = function()
+      local material = require 'material'
+
+      material.setup {
+        contrast = {
+          sidebars = true,
+          floating_windows = true,
+          non_current_windows = true,
+        },
+        lualine_style = 'default',
+        plugins = { -- Uncomment the plugins that you use to highlight them
+          -- Available plugins:
+          'dashboard',
+          -- "eyeliner",
+          'fidget',
+          'flash',
+          'gitsigns',
+          'harpoon',
+          -- "hop",
+          -- "illuminate",
+          'indent-blankline',
+          -- "lspsaga",
+          'mini',
+          -- "neogit",
+          -- "neotest",
+          -- "neo-tree",
+          -- "neorg",
+          -- "noice",
+          -- "nvim-cmp",
+          -- "nvim-navic",
+          -- "nvim-tree",
+          'nvim-web-devicons',
+          -- "rainbow-delimiters",
+          -- "sneak",
+          'telescope',
+          'trouble',
+          'which-key',
+          -- "nvim-notify",
+        },
+        disable = {
+          background = false,
+        },
+      }
+      vim.g.material_style = 'darker'
+      -- vim.cmd 'colorscheme material'
+    end,
+  },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -876,9 +915,27 @@ require('lazy').setup({
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
     config = function()
-      require('mini.ai').setup { n_lines = 500 }
+      require('mini.ai').setup { n_lines = 42 }
       require('mini.surround').setup()
-      require('mini.indentscope').setup { draw = { delay = 60 } }
+      require('mini.indentscope').setup {
+        draw = {
+          animation = require('mini.indentscope').gen_animation.linear { duration = 50, unit = 'total' },
+        },
+        options = { try_as_border = true },
+
+        -- Disable for certain filetypes
+        vim.api.nvim_create_autocmd({ 'FileType' }, {
+          desc = 'Disable indentscope for certain filetypes',
+          callback = function()
+            local ignore_filetypes = {
+              'dashboard',
+            }
+            if vim.tbl_contains(ignore_filetypes, vim.bo.filetype) then
+              vim.b.miniindentscope_disable = true
+            end
+          end,
+        }),
+      }
       require('mini.tabline').setup()
       require('mini.move').setup()
       require('mini.extra').setup()
@@ -942,7 +999,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   require 'kickstart.plugins.debug',
-  require 'kickstart.plugins.indent_line',
+  -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
