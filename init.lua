@@ -76,7 +76,7 @@ vim.opt.hlsearch = false
 vim.opt.incsearch = true
 
 -- NOTE: KEYMAPS
-vim.keymap.set({ 'n', 'i' }, '<C-s>', '<cmd>w<CR>')
+vim.keymap.set({ 'n', 'i' }, '<C-s>', '<Esc><cmd>w<CR>')
 vim.keymap.set('n', ']b', '<cmd>bnext<CR>', { noremap = false })
 vim.keymap.set('n', '[b', '<cmd>bprev<CR>', { noremap = false })
 vim.keymap.set('n', ';b', '<cmd>bd<CR>', { noremap = false })

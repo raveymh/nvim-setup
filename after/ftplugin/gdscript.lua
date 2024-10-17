@@ -1,5 +1,5 @@
 vim.opt_local.formatoptions:remove 'o'
-vim.keymap.set({ 'n' }, '<leader>g', '<cmd>!gdformat %<CR>', { desc = '[G]d format' })
+vim.keymap.set({ 'n' }, '<leader>g', '<cmd>!gdlint %<CR>', { desc = '[G]d Lint' })
 
 -- use folding provided by plugin
 -- vim.opt_local.foldmethod = 'expr'
