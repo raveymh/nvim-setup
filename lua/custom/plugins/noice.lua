@@ -7,14 +7,14 @@ return {
     -- OPTIONAL:
     --   `nvim-notify` is only needed, if you want to use the notification view.
     --   If not available, we use `mini` as the fallback
-    {
-      'rcarriga/nvim-notify',
-      name = 'notify',
-      opts = {
-        stages = 'static',
-        background_colour = '#000000',
-      },
-    },
+    -- {
+    --   'rcarriga/nvim-notify',
+    --   name = 'notify',
+    --   opts = {
+    --     stages = 'static',
+    --     background_colour = '#000000',
+    --   },
+    -- },
   },
   vim.keymap.set('n', '<leader>n', '<cmd>Noice<CR>', { desc = 'Noice messages' }),
   init = function()
@@ -24,7 +24,7 @@ return {
     lsp = {
       progress = {
         enabled = false,
-        view = 'notify',
+        view = 'mini',
       },
       -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
       override = {
@@ -32,15 +32,11 @@ return {
         ['vim.lsp.util.stylize_markdown'] = false,
         ['cmp.entry.get_documentation'] = true, -- requires hrsh7th/nvim-cmp
       },
-      hover = {
-        enabled = false,
-      },
       signature = {
         enabled = false,
         auto_open = {
           enabled = false,
         },
-        view = 'notify',
       },
     },
     -- you can enable a preset for easier configuration

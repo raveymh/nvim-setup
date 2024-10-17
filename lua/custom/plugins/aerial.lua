@@ -20,5 +20,5 @@ return {
   },
   vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { desc = 'Next symbol' }),
   vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { desc = 'Previous symbol' }),
-  vim.keymap.set('n', '<leader>a', '<cmd>AerialNavToggle<CR>', { desc = 'Code symbol navigation' }),
+  vim.keymap.set('n', '<leader>a', '<cmd>AerialNavToggle<CR>', { desc = 'Aerial code navigation' }),
 }

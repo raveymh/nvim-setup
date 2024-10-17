@@ -51,7 +51,7 @@ vim.o.list = true
 vim.o.listchars = 'trail:~,tab:> ,nbsp:␣'
 vim.opt.signcolumn = 'yes'
 vim.opt.updatetime = 50
-vim.opt.timeoutlen = 690
+vim.opt.timeoutlen = 500
 
 vim.opt.splitright = true
 vim.opt.splitbelow = true
@@ -65,9 +65,8 @@ vim.opt.incsearch = true
 
 -- NOTE: KEYMAPS
 vim.keymap.set({ 'n', 'i' }, '<C-s>', '<Esc><cmd>w<CR>')
-vim.keymap.set('n', ']b', '<cmd>bnext<CR>', { noremap = false })
-vim.keymap.set('n', '[b', '<cmd>bprev<CR>', { noremap = false })
-vim.keymap.set('n', ';b', '<cmd>bd<CR>', { noremap = false })
+vim.keymap.set('n', ']b', '<cmd>bnext<CR>', { desc = 'Next buffer', noremap = false })
+vim.keymap.set('n', '[b', '<cmd>bprev<CR>', { desc = 'Previous buffer', noremap = false })
 vim.keymap.set('n', '<C-f>', '/', { noremap = false })
 
 vim.keymap.set({ 'n' }, 's', '<Nop>')
@@ -139,7 +138,7 @@ require('lazy').setup({
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    event = 'VeryLazy', -- Sets the loading event to 'VimEnter'
+    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
       triggers = {
         { '<auto>', mode = 'ns' },
@@ -193,7 +192,11 @@ require('lazy').setup({
         { '<leader>b', group = 'Buffer' },
         { '<leader>f', group = 'Find' },
         { '<leader>g', group = 'Git' },
+        { '<leader>t', group = 'Toggle' },
         { '<leader>l', icon = '', group = 'LSP' },
+        { '<leader>fn', desc = 'Neovim config', icon = '⛭' },
+        { '<leader>fk', desc = 'Keymaps', icon = '⚿' },
+        { "<leader>f'", desc = 'Registers', icon = '[]' },
         { '<leader>z', icon = '' },
         { '<leader>u', icon = '⎌' },
         { '<leader>w', proxy = '<c-w>', group = 'Windows' },
@@ -211,6 +214,7 @@ require('lazy').setup({
         { 'zM', desc = 'Fold all', icon = '⯆' },
         { 'zR', desc = 'Unfold all', icon = '⯅' },
         { 'zx', desc = 'Update folds', icon = '⟳' },
+        { '<leader>h', hidden = true },
         { 'gg', hidden = true },
         { 'ge', hidden = true },
         { 'gt', hidden = true },
@@ -299,26 +303,20 @@ require('lazy').setup({
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Files' })
-      vim.keymap.set('n', '<leader>ft', builtin.live_grep, { desc = 'Find text Fuzzy' })
-      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Find text Grep' })
+      vim.keymap.set('n', '<leader>ft', builtin.current_buffer_fuzzy_find, { desc = 'Fuzzy find text in buffer' })
+      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Grep working directory' })
       vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = 'Keymaps' })
-      vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Help tags' })
-      vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = 'Codes Diagnotics' })
       vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = 'Recently opened files' })
-      vim.keymap.set('n', '<leader>fc', builtin.commands, { desc = 'Commands' })
       vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Buffers' })
       vim.keymap.set('n', "<leader>f'", builtin.registers, { desc = 'Registers' })
       -- NOTE: Other <leader> commands
-      vim.keymap.set('n', '<leader>fs', '<cmd>Telescope aerial<CR>', { desc = 'Code Symbols' })
       vim.keymap.set('n', '<leader>z', "<cmd>lua require('zen-mode').toggle({})<CR>", { desc = 'Zenmode' })
       vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit' })
-      vim.keymap.set('n', '<leader>u', '<cmd>UndotreeToggle<CR>', { desc = 'UndoTree' })
       vim.keymap.set('n', '<leader>bo', '<cmd>%bd|e#|bd#<CR>', { desc = 'Close all other buffers' })
       vim.keymap.set('n', '<leader>bn', '<cmd>bnext<CR>', { desc = 'Next buffer' })
       vim.keymap.set('n', '<leader>bp', '<cmd>bprevious<CR>', { desc = 'Previous buffer' })
       vim.keymap.set('n', '<leader>bc', '<cmd>bd<CR>', { desc = 'Close buffer' })
       -- NOTE: Git
-      vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<CR>', { desc = 'LazyGit TUI' })
       vim.keymap.set('n', '<leader>gb', '<cmd>Telescope git_branches<CR>', { desc = 'Branches' })
       vim.keymap.set('n', '<leader>gc', '<cmd>Telescope git_commits<CR>', { desc = 'Commits' })
       vim.keymap.set('n', '<leader>gC', '<cmd>Telescope git_bcommits<CR>', { desc = "Current buffer's commits" })
@@ -332,7 +330,7 @@ require('lazy').setup({
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>fn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = 'Neovim config' })
+      end, { desc = 'Config' })
     end,
   },
   { 'junegunn/fzf.vim', dependencies = { 'junegunn/fzf' }, dir = '~/.fzf', build = './install --all' },
