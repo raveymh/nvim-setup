@@ -3,22 +3,17 @@ vim.g.maplocalleader = ' '
 
 -- Set python3 path
 vim.g.python3_host_prog = 'C:\\Users\\User\\scoop\\apps\\python310\\current\\python.exe'
-
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
-
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.textwidth = 0
 vim.opt.wrapmargin = 0
 vim.opt.wrap = true
 vim.opt.linebreak = true
-
 vim.opt.mouse = 'a'
-
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
-
 vim.opt.encoding = 'utf-8'
 vim.opt.fileencoding = 'utf-8'
 -- Sync clipboard between OS and Neovim.
@@ -75,17 +70,12 @@ vim.keymap.set('n', '[b', '<cmd>bprev<CR>', { noremap = false })
 vim.keymap.set('n', ';b', '<cmd>bd<CR>', { noremap = false })
 vim.keymap.set('n', '<C-f>', '/', { noremap = false })
 
--- Disable s key for mini.surround
-vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
+vim.keymap.set({ 'n' }, 's', '<Nop>')
 vim.keymap.set('n', 'q', '<Nop>')
 
 -- keep cursor in middle of the screen when C-d and C-u or n N navigating
 vim.keymap.set({ 'n', 'v' }, '<C-d>', '<C-d>zz')
 vim.keymap.set({ 'n', 'v' }, '<C-u>', '<C-u>zz')
-
--- move selection up and down in visual mode
-vim.keymap.set('v', 'J', "<cmd>m '>+1<CR>gv=gv<CR>")
-vim.keymap.set('v', 'K', "<cmd>m '<-2<CR>gv=gv<CR>")
 
 -- keep cursor in middle of the screen when searching
 vim.keymap.set('n', 'n', 'nzz')
@@ -211,6 +201,16 @@ require('lazy').setup({
         { 'gD', desc = 'Go to Declaration', icon = '' },
         { 'go', desc = 'Go to Type Definition', icon = '' },
         { 'gv', desc = 'Last Visual Selection', icon = '~' },
+        { 'gz', desc = 'Flash Goto', icon = '🗲 ' },
+        { 'gZ', desc = 'Flash Select', icon = '☇' },
+        { 'za', desc = 'Fold', icon = '' },
+        { 'zA', desc = 'Fold recursively', icon = '' },
+        { 'zd', desc = 'Delete fold', icon = '⯇' },
+        { 'zD', desc = 'Delete folds recursively', icon = '⯇' },
+        { 'zf', desc = 'Make Fold', icon = '⯈' },
+        { 'zM', desc = 'Fold all', icon = '⯆' },
+        { 'zR', desc = 'Unfold all', icon = '⯅' },
+        { 'zx', desc = 'Update folds', icon = '⟳' },
         { 'gg', hidden = true },
         { 'ge', hidden = true },
         { 'gt', hidden = true },
@@ -222,26 +222,16 @@ require('lazy').setup({
         { 'g[', hidden = true },
         { 'g]', hidden = true },
         { 'g~', hidden = true },
-        { 'za', desc = 'Fold', icon = '' },
-        { 'zA', desc = 'Fold recursively', icon = '' },
-        { 'zd', desc = 'Delete fold', icon = '⯇' },
-        { 'zD', desc = 'Delete folds recursively', icon = '⯇' },
-        { 'zf', desc = 'Make Fold', icon = '⯈' },
-        { 'zM', desc = 'Fold all', icon = '⯆' },
-        { 'zR', desc = 'Unfold all', icon = '⯅' },
-        { 'zx', desc = 'Update folds', icon = '⟳' },
         { 'zb', hidden = true },
         { 'zc', hidden = true },
         { 'zC', hidden = true },
         { 'ze', hidden = true },
-        { 'zg', hidden = true },
         { 'zH', hidden = true },
         { 'zL', hidden = true },
         { 'zm', hidden = true },
         { 'zo', hidden = true },
         { 'zO', hidden = true },
         { 'zr', hidden = true },
-        { 'zs', hidden = true },
         { 'zt', hidden = true },
         { 'zv', hidden = true },
         { 'zw', hidden = true },
@@ -879,8 +869,8 @@ require('lazy').setup({
     opts = {},
     -- stylua: ignore
     keys = {
-        { "S",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-        { "s",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+        { "gz",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+        { "gZ",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
         { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
     },
   },
@@ -888,21 +878,11 @@ require('lazy').setup({
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
     config = function()
-      -- Better Around/Inside textobjects
-      --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
-      --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
-
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
-
-      -- Mini Indentscope
       require('mini.indentscope').setup { draw = { delay = 60 } }
       require('mini.tabline').setup()
+      require('mini.move').setup()
       require('mini.extra').setup()
     end,
   },
@@ -968,7 +948,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
