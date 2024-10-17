@@ -202,6 +202,8 @@ require('lazy').setup({
       spec = {
         { '<leader>b', group = 'Buffer' },
         { '<leader>f', group = 'Find' },
+        { '<leader>g', group = 'Git' },
+        { '<leader>l', icon = '', group = 'LSP' },
         { '<leader>z', icon = '' },
         { '<leader>u', icon = '⎌' },
         { '<leader>w', proxy = '<c-w>', group = 'Windows' },
@@ -290,7 +292,7 @@ require('lazy').setup({
             vertical = {
               width = 0.6,
               height = 0.9,
-              preview_height = 0.33,
+              preview_height = 0.69,
             },
           },
         },
@@ -308,25 +310,40 @@ require('lazy').setup({
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Files' })
-      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Grep Files' })
+      vim.keymap.set('n', '<leader>ft', builtin.live_grep, { desc = 'Find text Fuzzy' })
+      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Find text Grep' })
       vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = 'Keymaps' })
-      vim.keymap.set('n', '<leader>fs', '<cmd>Telescope aerial<CR>', { desc = 'Code Symbols' })
-      -- vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind by [W]ord' })
+      vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Help tags' })
       vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = 'Codes Diagnotics' })
       vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = 'Recently opened files' })
+      vim.keymap.set('n', '<leader>fc', builtin.commands, { desc = 'Commands' })
       vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Buffers' })
+      vim.keymap.set('n', "<leader>f'", builtin.registers, { desc = 'Registers' })
+      -- NOTE: Other <leader> commands
+      vim.keymap.set('n', '<leader>fs', '<cmd>Telescope aerial<CR>', { desc = 'Code Symbols' })
       vim.keymap.set('n', '<leader>z', "<cmd>lua require('zen-mode').toggle({})<CR>", { desc = 'Zenmode' })
       vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit' })
       vim.keymap.set('n', '<leader>u', '<cmd>UndotreeToggle<CR>', { desc = 'UndoTree' })
       vim.keymap.set('n', '<leader>bo', '<cmd>%bd|e#|bd#<CR>', { desc = 'Close all other buffers' })
       vim.keymap.set('n', '<leader>bn', '<cmd>bnext<CR>', { desc = 'Next buffer' })
       vim.keymap.set('n', '<leader>bp', '<cmd>bprevious<CR>', { desc = 'Previous buffer' })
-      vim.keymap.set('n', '<leader>bd', '<cmd>bd<CR>', { desc = 'Delete buffer' })
-
+      vim.keymap.set('n', '<leader>bc', '<cmd>bd<CR>', { desc = 'Close buffer' })
+      -- NOTE: Git
+      vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<CR>', { desc = 'LazyGit TUI' })
+      vim.keymap.set('n', '<leader>gb', '<cmd>Telescope git_branches<CR>', { desc = 'Branches' })
+      vim.keymap.set('n', '<leader>gc', '<cmd>Telescope git_commits<CR>', { desc = 'Commits' })
+      vim.keymap.set('n', '<leader>gC', '<cmd>Telescope git_bcommits<CR>', { desc = "Current buffer's commits" })
+      vim.keymap.set('n', '<leader>gh', '<cmd>Telescope git_stash<CR>', { desc = 'Stash' })
+      vim.keymap.set('n', '<leader>gs', '<cmd>Telescope git_status<CR>', { desc = 'Git Status' })
+      -- NOTE: LSP
+      vim.keymap.set('n', '<leader>ls', '<cmd>Telescope lsp_document_symbols<CR>', { desc = 'List document symbols' })
+      vim.keymap.set('n', '<leader>lS', '<cmd>Telescope lsp_workspace_symbols<CR>', { desc = 'List workspace symbols' })
+      vim.keymap.set('n', '<leader>lr', '<cmd>Telescope lsp_references<CR>', { desc = 'List references' })
+      vim.keymap.set('n', '<leader>ld', '<cmd>Telescope diagnostics<CR>', { desc = 'Diagnostics' })
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>fn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[F]ind [N]eovim files' })
+      end, { desc = 'Neovim config' })
     end,
   },
   { 'junegunn/fzf.vim', dependencies = { 'junegunn/fzf' }, dir = '~/.fzf', build = './install --all' },
@@ -465,7 +482,6 @@ require('lazy').setup({
         desc = 'LSP actions',
         callback = function(event)
           local opts = { buffer = event.buf }
-
           vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', { desc = 'Display Hover information' })
           vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', { desc = 'Go to definition' })
           vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', { desc = 'Go to declaration' })
@@ -843,7 +859,7 @@ require('lazy').setup({
   },
   -- {
   --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-  --   'folke/tokyonight.nvim',
+  --   'folke/tokyonight.nvim',false
   --   priority = 1000, -- Make sure to load this before all the other start plugins.
   --   init = function()
   --     -- Like many other themes, this one has different styles, and you could load
@@ -910,6 +926,7 @@ require('lazy').setup({
         'luadoc',
         'markdown',
         'markdown_inline',
+        'python',
         'query',
         'vim',
         'vimdoc',
@@ -923,7 +940,7 @@ require('lazy').setup({
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = false, disable = { 'ruby' } },
+      indent = { enable = true, disable = { 'ruby' } },
       incremental_selection = {
         enable = true,
         keymaps = {
