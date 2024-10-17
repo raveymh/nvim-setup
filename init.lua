@@ -52,18 +52,11 @@ vim.o.completeopt = 'menu,menuone,noselect'
 vim.o.pumblend = 10
 vim.o.pumheight = 10
 
--- Show tab characters and trailing crap
 vim.o.list = true
 vim.o.listchars = 'trail:~,tab:> ,nbsp:␣'
-
--- Keep signcolumn on by default
 vim.opt.signcolumn = 'yes'
-
--- Decrease update time
 vim.opt.updatetime = 50
-
--- Displays which-key popup sooner
-vim.opt.timeoutlen = 250
+vim.opt.timeoutlen = 690
 
 vim.opt.splitright = true
 vim.opt.splitbelow = true
@@ -85,9 +78,6 @@ vim.keymap.set('n', '<C-f>', '/', { noremap = false })
 -- Disable s key for mini.surround
 vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
 vim.keymap.set('n', 'q', '<Nop>')
-
-vim.keymap.set('n', '<leader>z', "<cmd>lua require('zen-mode').toggle({})<CR>", { desc = 'Toggle [z]enmode' })
-vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit' })
 
 -- keep cursor in middle of the screen when C-d and C-u or n N navigating
 vim.keymap.set({ 'n', 'v' }, '<C-d>', '<C-d>zz')
@@ -159,14 +149,19 @@ require('lazy').setup({
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+    event = 'VeryLazy', -- Sets the loading event to 'VimEnter'
     opts = {
       triggers = {
-        { '<auto>', mode = 'nixsotc' },
-        { 'a', mode = { 'n', 'v' } },
+        { '<auto>', mode = 'ns' },
       },
-
+      win = {
+        col = 0.5,
+        border = 'rounded',
+        padding = { 1, 5 },
+      },
+      preset = 'helix',
       icons = {
+        group = '',
         -- set icon mappings to true if you have a Nerd Font
         mappings = vim.g.have_nerd_font,
         -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
@@ -205,13 +200,52 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
-        { '<leader>d', group = '[D]ocument' },
-        { '<leader>b', group = '[B]uffer' },
-        { '<leader>f', group = '[F]ind' },
-        { '<leader>w', group = '[W]orkspace' },
-        { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>b', group = 'Buffer' },
+        { '<leader>f', group = 'Find' },
+        { '<leader>z', icon = '' },
+        { '<leader>u', icon = '⎌' },
+        { '<leader>w', proxy = '<c-w>', group = 'Windows' },
+        { 'gd', desc = 'Go to Definition', icon = '' },
+        { 'gD', desc = 'Go to Declaration', icon = '' },
+        { 'go', desc = 'Go to Type Definition', icon = '' },
+        { 'gv', desc = 'Last Visual Selection', icon = '~' },
+        { 'gg', hidden = true },
+        { 'ge', hidden = true },
+        { 'gt', hidden = true },
+        { 'gT', hidden = true },
+        { 'gu', hidden = true },
+        { 'gU', hidden = true },
+        { 'gw', hidden = true },
+        { 'g%', hidden = true },
+        { 'g[', hidden = true },
+        { 'g]', hidden = true },
+        { 'g~', hidden = true },
+        { 'za', desc = 'Fold', icon = '' },
+        { 'zA', desc = 'Fold recursively', icon = '' },
+        { 'zd', desc = 'Delete fold', icon = '⯇' },
+        { 'zD', desc = 'Delete folds recursively', icon = '⯇' },
+        { 'zf', desc = 'Make Fold', icon = '⯈' },
+        { 'zk', desc = 'Flash Treesitter', icon = '🗲' },
+        { 'zM', desc = 'Fold all', icon = '⯆' },
+        { 'zR', desc = 'Unfold all', icon = '⯅' },
+        { 'zx', desc = 'Update folds', icon = '⟳' },
+        { 'zb', hidden = true },
+        { 'zc', hidden = true },
+        { 'zC', hidden = true },
+        { 'ze', hidden = true },
+        { 'zg', hidden = true },
+        { 'zH', hidden = true },
+        { 'zL', hidden = true },
+        { 'zm', hidden = true },
+        { 'zo', hidden = true },
+        { 'zO', hidden = true },
+        { 'zr', hidden = true },
+        { 'zs', hidden = true },
+        { 'zt', hidden = true },
+        { 'zv', hidden = true },
+        { 'zw', hidden = true },
+        { 'zz', hidden = true },
+        { 'z<CR>', hidden = true },
       },
     },
   },
@@ -255,8 +289,8 @@ require('lazy').setup({
           layout_config = {
             vertical = {
               width = 0.6,
-              height = 0.8,
-              preview_height = 0.4,
+              height = 0.9,
+              preview_height = 0.33,
             },
           },
         },
@@ -273,19 +307,21 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
-      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = '[F]ind by [G]rep' })
-      vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = '[F]ind [K]eymaps' })
-      vim.keymap.set('n', '<leader>fs', '<cmd>Telescope aerial<CR>', { desc = '[F]ind [S]ymbols' })
+      vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Files' })
+      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Grep Files' })
+      vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = 'Keymaps' })
+      vim.keymap.set('n', '<leader>fs', '<cmd>Telescope aerial<CR>', { desc = 'Code Symbols' })
       -- vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind by [W]ord' })
-      vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnotics' })
-      vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = '[F]ind [R]ecently opened files' })
-      vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = '[F]ind [B]uffers' })
-      vim.keymap.set('n', '<leader>z', "<cmd>lua require('zen-mode').toggle({})<CR>", { desc = 'Toggle [z]enmode' })
-      vim.keymap.set('n', '<C-b>o', '<cmd>%bd|e#|bd#<CR>', { desc = 'Close all other buffers' })
-      vim.keymap.set('n', '<C-b>n', '<cmd>bnext<CR>', { desc = 'Next buffer' })
-      vim.keymap.set('n', '<C-b>p', '<cmd>bprevious<CR>', { desc = 'Previous buffer' })
-      vim.keymap.set('n', '<C-b>d', '<cmd>bd<CR>', { desc = 'Delete buffer' })
+      vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = 'Codes Diagnotics' })
+      vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = 'Recently opened files' })
+      vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Buffers' })
+      vim.keymap.set('n', '<leader>z', "<cmd>lua require('zen-mode').toggle({})<CR>", { desc = 'Zenmode' })
+      vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit' })
+      vim.keymap.set('n', '<leader>u', '<cmd>UndotreeToggle<CR>', { desc = 'UndoTree' })
+      vim.keymap.set('n', '<leader>bo', '<cmd>%bd|e#|bd#<CR>', { desc = 'Close all other buffers' })
+      vim.keymap.set('n', '<leader>bn', '<cmd>bnext<CR>', { desc = 'Next buffer' })
+      vim.keymap.set('n', '<leader>bp', '<cmd>bprevious<CR>', { desc = 'Previous buffer' })
+      vim.keymap.set('n', '<leader>bd', '<cmd>bd<CR>', { desc = 'Delete buffer' })
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>fn', function()
@@ -431,12 +467,11 @@ require('lazy').setup({
           local opts = { buffer = event.buf }
 
           vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', { desc = 'Display Hover information' })
-          vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', { desc = 'Jump to definition' })
-          vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', { desc = 'Jump to declaration' })
+          vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', { desc = 'Go to definition' })
+          vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', { desc = 'Go to declaration' })
           vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', { desc = 'List implementations under quickfix window' })
-          vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', { desc = 'Jump to type definition' })
+          vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', { desc = 'Go to type definition' })
           vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', { desc = 'List references under quickfix window' })
-          -- vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Display signature information' })
           vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', { desc = 'Rename all references' })
           vim.keymap.set('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<cr>', { desc = 'Code actions' })
         end,
@@ -562,7 +597,7 @@ require('lazy').setup({
 
     opts = {
       keymap = {
-        show = '<C-t>',
+        show = '<C-space>',
         show_documentation = '<C-b>',
         hide_documentation = '<C-b>',
         scroll_documentation_up = '<C-u>',
@@ -590,16 +625,16 @@ require('lazy').setup({
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
     cmd = { 'ConformInfo' },
-    keys = {
-      {
-        '<leader>m',
-        function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
-        end,
-        mode = '',
-        desc = 'For[m]at buffer',
-      },
-    },
+    -- keys = {
+    --   {
+    --     '<leader>m',
+    --     function()
+    --       require('conform').format { async = true, lsp_format = 'fallback' }
+    --     end,
+    --     mode = '',
+    --     desc = 'Format buffer',
+    --   },
+    -- },
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
@@ -829,8 +864,7 @@ require('lazy').setup({
     opts = {},
     -- stylua: ignore
     keys = {
-        { "zk",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-        { "Zk",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+        { "zk",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
         { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
         { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
         { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
