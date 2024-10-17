@@ -64,7 +64,7 @@ return {
     },
     views = {
       mini = {
-        timeout = 1000,
+        timeout = 2000,
         border = {
           style = 'none',
           padding = { 0, 1 },

@@ -1,4 +1,3 @@
-vim.keymap.set('n', '<leader>z', ":lua require('zen-mode').toggle({})<cr>", { desc = 'Toggle [z]enmode' })
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -87,7 +86,7 @@ vim.keymap.set('n', '<C-f>', '/', { noremap = false })
 vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
 vim.keymap.set('n', 'q', '<Nop>')
 
-vim.keymap.set('n', '<leader>z', ":lua require('zen-mode').toggle({})<cr>", { desc = 'Toggle [z]enmode' })
+vim.keymap.set('n', '<leader>z', "<cmd>lua require('zen-mode').toggle({})<CR>", { desc = 'Toggle [z]enmode' })
 vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit' })
 
 -- keep cursor in middle of the screen when C-d and C-u or n N navigating
@@ -95,12 +94,12 @@ vim.keymap.set({ 'n', 'v' }, '<C-d>', '<C-d>zz')
 vim.keymap.set({ 'n', 'v' }, '<C-u>', '<C-u>zz')
 
 -- move selection up and down in visual mode
-vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
-vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+vim.keymap.set('v', 'J', "<cmd>m '>+1<CR>gv=gv<CR>")
+vim.keymap.set('v', 'K', "<cmd>m '<-2<CR>gv=gv<CR>")
 
 -- keep cursor in middle of the screen when searching
-vim.keymap.set('n', 'n', 'nzzzv')
-vim.keymap.set('n', 'N', 'Nzzzv')
+vim.keymap.set('n', 'n', 'nzz')
+vim.keymap.set('n', 'N', 'Nzz')
 
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
@@ -282,28 +281,11 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnotics' })
       vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = '[F]ind [R]ecently opened files' })
       vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = '[F]ind [B]uffers' })
+      vim.keymap.set('n', '<leader>z', "<cmd>lua require('zen-mode').toggle({})<CR>", { desc = 'Toggle [z]enmode' })
       vim.keymap.set('n', '<C-b>o', '<cmd>%bd|e#|bd#<CR>', { desc = 'Close all other buffers' })
       vim.keymap.set('n', '<C-b>n', '<cmd>bnext<CR>', { desc = 'Next buffer' })
       vim.keymap.set('n', '<C-b>p', '<cmd>bprevious<CR>', { desc = 'Previous buffer' })
       vim.keymap.set('n', '<C-b>d', '<cmd>bd<CR>', { desc = 'Delete buffer' })
-
-      -- Slightly advanced example of overriding default behavior and theme
-      -- vim.keymap.set('n', '<leader>/', function()
-      --   -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-      --   builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-      --     winblend = 10,
-      --     previewer = false,
-      --   })
-      -- end, { desc = '[/] Fuzzily search in current buffer' })
-
-      -- It's also possible to pass additional configuration options.
-      --  See `:help telescope.builtin.live_grep()` for information about particular keys
-      -- vim.keymap.set('n', '<leader>s/', function()
-      --   builtin.live_grep {
-      --     grep_open_files = true,
-      --     prompt_title = 'Live Grep in Open Files',
-      --   }
-      -- end, { desc = '[S]earch [/] in Open Files' })
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>fn', function()
@@ -454,7 +436,7 @@ require('lazy').setup({
           vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', { desc = 'List implementations under quickfix window' })
           vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', { desc = 'Jump to type definition' })
           vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', { desc = 'List references under quickfix window' })
-          vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Display signature information' })
+          -- vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Display signature information' })
           vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', { desc = 'Rename all references' })
           vim.keymap.set('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<cr>', { desc = 'Code actions' })
         end,
@@ -545,13 +527,24 @@ require('lazy').setup({
     event = 'VeryLazy',
     opts = {
       bind = true,
+      max_width = 69,
+      close_timeout = 3000,
+      hint_prefix = {
+        above = '↙ ', -- when the hint is on the line above the current line
+        current = '← ', -- when the hint is on the same line
+        below = '↖ ', -- when the hint is on the line below the current line
+      },
       handler_opts = {
         border = 'rounded',
       },
+      select_signature_key = '<C-n>',
     },
     config = function(_, opts)
       require('lsp_signature').setup(opts)
     end,
+    vim.keymap.set({ 'n', 'i' }, '<C-k>', function()
+      require('lsp_signature').toggle_float_win()
+    end, { noremap = true, desc = 'Toggle signature help' }),
   },
 
   {
@@ -693,14 +686,14 @@ require('lazy').setup({
         -- No, but seriously. Please read `:help ins-completion`, it is really good!
         mapping = cmp.mapping.preset.insert {
           -- Select the [n]ext item
-          ['<C-n>'] = cmp.mapping.select_next_item(),
+          -- ['<C-n>'] = cmp.mapping.select_next_item(),
           -- Select the [p]revious item
-          ['<C-p>'] = cmp.mapping.select_prev_item(),
+          -- ['<C-p>'] = cmp.mapping.select_prev_item(),
 
           -- Scroll the documentation window [b]ack / [f]orward
-          ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-d>'] = cmp.mapping.scroll_docs(4),
-
+          -- ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+          -- ['<C-d>'] = cmp.mapping.scroll_docs(4),
+          --
           ['<Up>'] = cmp.config.disable,
           ['<Down>'] = cmp.config.disable,
           ['<CR>'] = cmp.mapping.confirm { select = true },
