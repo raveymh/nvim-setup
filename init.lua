@@ -676,15 +676,14 @@ require('lazy').setup({
           end,
         }),
       }
+      require('mini.move').setup()
+      require('mini.extra').setup()
       -- require('mini.tabline').setup()
       -- vim.api.nvim_set_hl(0, 'MiniTablineCurrent', { link = 'StatusLine' })
       -- vim.api.nvim_set_hl(0, 'MiniTablineVisible', { link = 'StatusLine' })
       -- vim.api.nvim_set_hl(0, 'MiniTablineModifiedCurrent', { link = 'TabLineSel' })
       -- vim.api.nvim_set_hl(0, 'MiniTablineModifiedVisible', { link = 'TabLineSel' })
       -- vim.api.nvim_set_hl(0, 'MiniTablineHidden', { link = 'FoldColumn' })
-
-      require('mini.move').setup()
-      require('mini.extra').setup()
     end,
   },
   { -- Highlight, edit, and navigate code
