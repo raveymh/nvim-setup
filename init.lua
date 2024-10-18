@@ -71,8 +71,8 @@ vim.keymap.set({ 'n' }, 's', '<Nop>')
 vim.keymap.set('n', 'q', '<Nop>')
 
 -- keep cursor in middle of the screen when C-d and C-u or n N navigating
-vim.keymap.set({ 'n', 'v' }, '<C-d>', '<C-d>zz')
-vim.keymap.set({ 'n', 'v' }, '<C-u>', '<C-u>zz')
+vim.keymap.set({ 'n', 'v' }, '<C-d>', '}')
+vim.keymap.set({ 'n', 'v' }, '<C-u>', '{')
 
 -- keep cursor in middle of the screen when searching
 vim.keymap.set('n', 'n', 'nzz')
@@ -84,8 +84,33 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- [[ Install `lazy.nvim` plugin manager ]]
---    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
+-- NOTE: Auto commands
+vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
+  callback = function()
+    vim.cmd 'set formatoptions-=cro'
+  end,
+})
+
+-- remap q close
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+  pattern = {
+    'netrw',
+    'git',
+    'help',
+    'man',
+    'lspinfo',
+    'oil',
+    'tsplayground',
+    '',
+  },
+  callback = function()
+    vim.cmd [[
+      nnoremap <silent> <buffer> q :close<CR>
+      set nobuflisted
+    ]]
+  end,
+})
+
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
@@ -100,7 +125,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- Use `opts = {}` to force a plugin to be loaded.
 
-  { -- Useful plugin to show you pending keybinds.
+  { -- which-key
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -219,11 +244,6 @@ require('lazy').setup({
   },
 
   -- NOTE: Plugins can specify dependencies.
-  --
-  -- The dependencies are proper plugin specifications as well - anything
-  -- you do for a plugin at the top level, you can do for a dependency.
-  --
-  -- Use the `dependencies` key to specify the dependencies of a particular plugin
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
@@ -511,7 +531,7 @@ require('lazy').setup({
     end, { silent = true, noremap = true, desc = 'Toggle signature' }),
   },
 
-  {
+  { -- blink-cmp
     'saghen/blink.cmp',
     lazy = false, -- lazy loading handled internally
     event = 'InsertEnter',
@@ -640,7 +660,7 @@ require('lazy').setup({
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
   { 'folke/trouble.nvim', event = 'VeryLazy' },
-  {
+  { -- flash.nvim
     'folke/flash.nvim',
     event = 'VeryLazy',
     opts = {},
@@ -736,11 +756,6 @@ require('lazy').setup({
   },
   { 'dstein64/vim-startuptime', event = 'VeryLazy' },
 
-  -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
-  --
-  --  Here are some example plugins that I've included in the Kickstart repository.
-  --  Uncomment any of the lines below to enable them (you will need to restart nvim).
-  --
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
