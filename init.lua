@@ -1,9 +1,6 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
--- Set python3 path
-vim.g.python3_host_prog = 'C:\\Users\\User\\scoop\\apps\\python310\\current\\python.exe'
--- Set to true if you have a Nerd Font installed and selected in the terminal
+-- vim.g.python3_host_prog = 'C:\\Users\\User\\scoop\\apps\\python310\\current\\python.exe'
 vim.g.have_nerd_font = true
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -28,7 +25,6 @@ end)
 vim.opt.breakindent = true
 vim.opt.smartindent = true
 vim.opt.colorcolumn = '+1'
-
 -- Save undo history
 vim.opt.undofile = true
 
@@ -98,43 +94,9 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
--- [[ Configure and install plugins ]]
---
---  To check the current status of your plugins, run
---    :Lazy
---
---  You can press `?` in this menu for help. Use `:q` to close the window
---
---  To update plugins you can run
---    :Lazy update
---
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
-  -- NOTE: Plugins can also be added by using a table,
-  -- with the first argument being the link and the following
-  -- keys can be used to configure plugin behavior/loading/etc.
-  --
   -- Use `opts = {}` to force a plugin to be loaded.
-  --
-
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
-  --    require('gitsigns').setup({ ... })
-  --
-  -- See `:help gitsigns` to understand what the configuration keys do
-  -- { -- Adds git related signs to the gutter, as well as utilities for managing changes
-  --   'lewis6991/gitsigns.nvim',
-  --   event = 'VeryLazy',
-  --   opts = {
-  --     signs = {
-  --       add = { text = '+' },
-  --       change = { text = '~' },
-  --       delete = { text = '_' },
-  --       topdelete = { text = '‾' },
-  --       changedelete = { text = '~' },
-  --     },
-  --   },
-  -- },
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
@@ -198,6 +160,7 @@ require('lazy').setup({
         { '<leader>fn', desc = 'Neovim config', icon = '⛭' },
         { '<leader>fk', desc = 'Keymaps', icon = '⚿' },
         { "<leader>f'", desc = 'Registers', icon = '[]' },
+        { '<leader>e', desc = 'Harpoon menu', icon = '' },
         { '<leader>z', icon = '' },
         { '<leader>u', icon = '⎌' },
         { '<leader>w', proxy = '<c-w>', group = 'Windows' },
@@ -215,7 +178,6 @@ require('lazy').setup({
         { 'zM', desc = 'Fold all', icon = '⯆' },
         { 'zR', desc = 'Unfold all', icon = '⯅' },
         { 'zx', desc = 'Update folds', icon = '⟳' },
-        { '<leader>h', hidden = true },
         { 'gg', hidden = true },
         { 'ge', hidden = true },
         { 'gt', hidden = true },
@@ -237,14 +199,21 @@ require('lazy').setup({
         { 'zo', hidden = true },
         { 'zO', hidden = true },
         { 'zr', hidden = true },
-        { 'zs', hidden = true },
         { 'zt', hidden = true },
         { 'zv', hidden = true },
         { 'zw', hidden = true },
         { 'zz', hidden = true },
         { 'z<CR>', hidden = true },
+        { '<leader>h', hidden = true },
+        { '<leader>1', hidden = true },
+        { '<leader>2', hidden = true },
+        { '<leader>3', hidden = true },
+        { '<leader>4', hidden = true },
+        { '<leader>5', hidden = true },
       },
     },
+    vim.keymap.set({ 'n', 'v' }, 'zs', ':%s@', { desc = 'Substitute from all lines' }),
+    vim.keymap.set({ 'v', 'x' }, 'zS', ':s@', { desc = 'Substitute from selected lines' }),
   },
 
   -- NOTE: Plugins can specify dependencies.
@@ -280,22 +249,72 @@ require('lazy').setup({
     },
     opts = {},
     config = function()
+      local actions = require 'telescope.actions'
       require('telescope').setup {
         defaults = {
+          path_display = { 'smart' },
+          color_devicons = true,
           layout_strategy = 'vertical',
           layout_config = {
             vertical = {
-              width = 0.6,
-              height = 0.9,
-              preview_height = 0.69,
+              height = 0.7,
+              width = 0.7,
             },
           },
         },
-        -- extensions = {
-        --   ['ui-select'] = {
-        --     require('telescope.themes').get_ivy(),
-        --   },
-        -- },
+        pickers = {
+          live_grep = {
+            theme = 'dropdown',
+          },
+          current_buffer_fuzzy_find = {
+            theme = 'dropdown',
+          },
+          buffers = {
+            theme = 'dropdown',
+            previewer = false,
+            initial_mode = 'normal',
+            mappings = {
+              i = {
+                ['<C-d>'] = actions.delete_buffer,
+              },
+              n = {
+                ['dd'] = actions.delete_buffer,
+              },
+            },
+          },
+          find_files = {
+            theme = 'dropdown',
+            previewer = false,
+          },
+          lsp_document_symbols = {
+            theme = 'dropdown',
+            initial_mode = 'normal',
+          },
+          lsp_workspace_symbols = {
+            theme = 'dropdown',
+            initial_mode = 'normal',
+          },
+          lsp_references = {
+            theme = 'dropdown',
+            initial_mode = 'normal',
+          },
+          lsp_definitions = {
+            theme = 'dropdown',
+            initial_mode = 'normal',
+          },
+          lsp_declarations = {
+            theme = 'dropdown',
+            initial_mode = 'normal',
+          },
+          lsp_implementations = {
+            theme = 'dropdown',
+            initial_mode = 'normal',
+          },
+          diagnostics = {
+            theme = 'dropdown',
+            initial_mode = 'normal',
+          },
+        },
       }
 
       -- Enable Telescope extensions if they are installed
@@ -327,10 +346,13 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>gh', '<cmd>Telescope git_stash<CR>', { desc = 'Stash' })
       vim.keymap.set('n', '<leader>gs', '<cmd>Telescope git_status<CR>', { desc = 'Git Status' })
       -- NOTE: LSP
+      vim.keymap.set('n', '<leader>ld', '<cmd>Telescope lsp_definitions<CR>', { desc = 'List definitions' })
+      vim.keymap.set('n', '<leader>lD', '<cmd>Telescope lsp_declarations<CR>', { desc = 'List declarations' })
       vim.keymap.set('n', '<leader>ls', '<cmd>Telescope lsp_document_symbols<CR>', { desc = 'List document symbols' })
       vim.keymap.set('n', '<leader>lS', '<cmd>Telescope lsp_workspace_symbols<CR>', { desc = 'List workspace symbols' })
       vim.keymap.set('n', '<leader>lr', '<cmd>Telescope lsp_references<CR>', { desc = 'List references' })
-      vim.keymap.set('n', '<leader>ld', '<cmd>Telescope diagnostics<CR>', { desc = 'Diagnostics' })
+      vim.keymap.set('n', '<leader>li', '<cmd>Telescope lsp_implementations<CR>', { desc = 'List implementations' })
+      vim.keymap.set('n', '<leader>lx', '<cmd>Telescope diagnostics<CR>', { desc = 'Diagnostics' })
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>fn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
@@ -569,24 +591,21 @@ require('lazy').setup({
     event = 'VeryLazy',
     opts = {
       bind = true,
-      max_width = 69,
-      close_timeout = 3000,
-      hint_prefix = {
-        above = '↙ ', -- when the hint is on the line above the current line
-        current = '← ', -- when the hint is on the same line
-        below = '↖ ', -- when the hint is on the line below the current line
-      },
+      floating_window = false,
+      floating_window_above_cur_line = false,
+      hint_prefix = '•',
+      hint_scheme = 'Identifier',
       handler_opts = {
         border = 'rounded',
       },
-      select_signature_key = '<C-n>',
     },
     config = function(_, opts)
       require('lsp_signature').setup(opts)
     end,
+
     vim.keymap.set({ 'n', 'i' }, '<C-k>', function()
       require('lsp_signature').toggle_float_win()
-    end, { noremap = true, desc = 'Toggle signature help' }),
+    end, { silent = true, noremap = true, desc = 'Toggle signature' }),
   },
 
   {
@@ -604,6 +623,7 @@ require('lazy').setup({
 
     opts = {
       keymap = {
+        hide = '<Left>',
         show = '<C-space>',
         show_documentation = '<C-b>',
         hide_documentation = '<C-b>',
@@ -842,58 +862,6 @@ require('lazy').setup({
       vim.api.nvim_set_hl(0, 'MiniTablineModifiedVisible', { link = 'TabLineSel' })
       vim.api.nvim_set_hl(0, 'MiniTablineHidden', { link = 'FoldColumn' })
       vim.cmd.colorscheme 'catppuccin'
-    end,
-  },
-
-  -- NOTE: Material colorscheme
-  {
-    'marko-cerovac/material.nvim',
-    name = 'material',
-    init = function()
-      local material = require 'material'
-
-      material.setup {
-        contrast = {
-          sidebars = true,
-          floating_windows = true,
-          non_current_windows = true,
-        },
-        lualine_style = 'default',
-        plugins = { -- Uncomment the plugins that you use to highlight them
-          -- Available plugins:
-          'dashboard',
-          -- "eyeliner",
-          'fidget',
-          'flash',
-          'gitsigns',
-          'harpoon',
-          -- "hop",
-          -- "illuminate",
-          'indent-blankline',
-          -- "lspsaga",
-          'mini',
-          -- "neogit",
-          -- "neotest",
-          -- "neo-tree",
-          -- "neorg",
-          -- "noice",
-          -- "nvim-cmp",
-          -- "nvim-navic",
-          -- "nvim-tree",
-          'nvim-web-devicons',
-          -- "rainbow-delimiters",
-          -- "sneak",
-          'telescope',
-          'trouble',
-          'which-key',
-          -- "nvim-notify",
-        },
-        disable = {
-          background = false,
-        },
-      }
-      vim.g.material_style = 'darker'
-      -- vim.cmd 'colorscheme material'
     end,
   },
 
